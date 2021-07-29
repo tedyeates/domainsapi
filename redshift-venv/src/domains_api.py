@@ -1,4 +1,4 @@
-from flask import request, Flask, session, jsonify
+from flask import request, Flask, jsonify
 from flask_mongoengine import MongoEngine
 
 from datetime import timedelta
@@ -8,11 +8,9 @@ from queue import Queue
 from threading import Thread
 
 from domains_util import get_title, update_time
-
+from socketserver import BaseHTTPServer
 
 app = Flask(__name__)
-app.secret_key = 'ymdDsglm5fKby7MlilNo'
-app.config['PERMANENT_SESSION_LIFETIME'] =  timedelta(seconds=10)
 
 app.config['MONGODB_SETTINGS'] = {
     'db': 'domainsdb',
@@ -25,7 +23,6 @@ class APITimeTracker(db.Document):
     total_invocations = db.IntField()
     total_time = db.DecimalField()
 
-
 @app.route('/titles', methods=['POST'])
 def titles():
     """Scrapes webpages asynchronously and pulls there titles text
@@ -36,8 +33,6 @@ def titles():
     Returns:
         list of str: A list of titles from webpages from urls in domains
     """
-    session.permanent = True
-
     domains = request.get_json()
     if not isinstance(domains, list):
         return {"error":"Expected list, recieved " + type(domains).__name__}, 400
@@ -83,6 +78,7 @@ def stats():
         'total_invocations': api_tracker.total_invocations, 
         'average_time': average_time
     }, 200
+
 
 if __name__ == "__main__":
     app.run()
