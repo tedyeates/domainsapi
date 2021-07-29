@@ -65,10 +65,10 @@ def titles():
 
 @app.route('/titles/stats', methods=['GET'])
 def stats():
-    """[summary]
+    """Provides average request time and number of invocations of /titles
 
     Returns:
-        [type]: [description]
+        dict of str: str/int : contains average time and number of times /titles has been accessed
     """
     api_tracker = APITimeTracker.objects().first()
     average_time = str(api_tracker.total_time / api_tracker.total_invocations)
