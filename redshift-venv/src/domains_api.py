@@ -8,7 +8,6 @@ from queue import Queue
 from threading import Thread
 
 from domains_util import get_title, update_time
-from socketserver import BaseHTTPServer
 
 app = Flask(__name__)
 
